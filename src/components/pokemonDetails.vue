@@ -7,7 +7,7 @@
       <div class="col-12 text-center">
         <div>Name: <span class="text-capitalize">{{pokemon.details.name}}</span></div>
         <span>Type{{pokemon.details.types.length > 1 ? 's': '' }}:</span>
-        <typeIcon v-for="{type} in pokemon.details.types" :type="type.name" class="d-inline-block ml-1" />
+        <typeIcon v-for="{type} in pokemon.details.types" :type="type.name" class="d-inline-block ml-1" :key="type.name" />
       </div>
     </div>
     <div class="row mb-3">

@@ -5,7 +5,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-2 col-md-4 col-sm-6 text-center" v-for="typing in results">
-          <typeIcon :type="typing.type" @click.native="selected = typing" hoverClick />
+          <typeIcon :type="typing.type" @click.native="selected = typing" hoverClick class="mx-1" />
         </div>
       </div>
       <div class="row" v-if="selected">

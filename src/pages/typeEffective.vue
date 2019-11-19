@@ -49,6 +49,9 @@
                         @click="addToTeam(myPokemon)">Add</button>
                 <pokemonDetails :pokemon="myPokemon" />
               </template>
+              <div class="text-danger" v-else-if="error !== null">
+                {{error}}
+              </div>
             </div>
             <div v-for="(pokemon, index) in pokemonTeam" 
                   class="tab-pane fade text-center" 
@@ -93,7 +96,8 @@
       return {
         searchName: '',
         pokemonTeam: [],
-        myPokemon: null
+        myPokemon: null,
+        error: null
       }
     },
     computed: {
@@ -113,13 +117,17 @@
     },
     methods: {
       async search() {
-        this.myPokemon = await this.getDetails(this.searchName);
+        try {
+          this.myPokemon = await this.getDetails(this.searchName);
+        } catch (e) {
+          this.error = "That Pokémon could not be found!";
+        }
       },
       async getDetails(name) {
         try {
           const details = (await axios({
             method:"GET",
-            url: `https://pokeapi.co/api/v2/pokemon/${name}`
+            url: `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
           })).data;
           const typing = {
             double_damage_from: [],
@@ -141,7 +149,7 @@
           }
           return {details, typing: this.calculateTyping(typing)}
         } catch (e) {
-          console.error(e);
+          throw e;
         }
       },
       calculateTyping(typeEffectiveness) {

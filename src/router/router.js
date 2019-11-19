@@ -18,7 +18,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomePage
+    component: typeEffectivePage
   },
   {
     path: '/strong',
