@@ -1,19 +1,27 @@
 'use strict'
 
-const webpack = require('webpack')
-const { VueLoaderPlugin } = require('vue-loader')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack');
+const jquery = require('jquery');
+const { VueLoaderPlugin } = require('vue-loader');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
   entry: [
     './src/app.js'
-  ],  devServer: {
+  ],
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
+  },
+  devServer: {
     hot: true,
     watchOptions: {
       poll: true
     }
-  },  module: {
+  },  
+  module: {
     rules: [
       {
         test: /\.vue$/,
@@ -66,13 +74,18 @@ module.exports = {
     		use: 'url-loader?limit=10000&mimetype=image/svg+xml'  
     	}
     ]
-  },  plugins: [
+  },  
+  plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
       inject: true
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jquery: 'jquery'
     })
   ]
 }

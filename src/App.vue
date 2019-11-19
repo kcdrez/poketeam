@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <div class="row">
+      <button @click="debug">test</button>
+    </div>
+    <div class="row">
       <div class="col">
         <ul class="nav nav-tabs">
           <li class="nav-item">
@@ -245,6 +248,67 @@
       addToTeam(pokemonData) {
         const index = this.pokemonTeam.findIndex(x => x.details.id === pokemonData.details.id);
         if (index == -1) this.pokemonTeam.push(pokemonData);
+      },
+      async debug() {
+        try {
+          const releasedPokemon = (await axios({
+            method: "GET",
+            url: "https://pokemon-go1.p.rapidapi.com/released_pokemon.json",
+            headers: {
+              "content-type": "application/octet-stream",
+              "x-rapidapi-host": "pokemon-go1.p.rapidapi.com",
+              "x-rapidapi-key": "1fb9c2c8a3mshe7d94a4b7788554p146d5bjsnd74b1f69ca80"
+            }
+          })).data;          
+          const types = (await axios({
+            method: "GET",
+            url: "https://pokemon-go1.p.rapidapi.com/pokemon_types.json",
+            headers: {
+              "content-type": "application/octet-stream",
+              "x-rapidapi-host": "pokemon-go1.p.rapidapi.com",
+              "x-rapidapi-key": "1fb9c2c8a3mshe7d94a4b7788554p146d5bjsnd74b1f69ca80"
+            }
+          })).data;
+          const results = (await axios({
+            method: "GET",
+            url: "https://pokemon-go1.p.rapidapi.com/pokemon_max_cp.json",
+            headers: {
+              "content-type": "application/octet-stream",
+              "x-rapidapi-host": "pokemon-go1.p.rapidapi.com",
+              "x-rapidapi-key": "1fb9c2c8a3mshe7d94a4b7788554p146d5bjsnd74b1f69ca80"
+            }
+          })).data
+          .reduce((map, pokemonCP) => {
+            if (pokemonCP.pokemon_id in releasedPokemon) {
+              const match = types.find(pokemonType => {
+                return pokemonCP.form === pokemonType.form &&
+                  pokemonCP.pokemon_id === pokemonType.pokemon_id;
+              });
+              if (match) {
+                match.type.forEach(type => {
+                  if (!(type in map)) { 
+                    map[type] = [];
+                  }
+                  const ignoredForms = ['Purified', 'Normal', 'Shadow'];
+                  const formAlreadyIncluded = map[type].some(x => x.pokemon_name === pokemonCP.pokemon_name && ignoredForms.includes(x.form)) && ignoredForms.includes(pokemonCP.form);
+                  if (!formAlreadyIncluded) {
+                    map[type].push(pokemonCP);
+                    map[type].sort((a, b) => {
+                      if (a.max_cp > b.max_cp) return -1;
+                      else if (b.max_cp > a.max_cp) return 1;
+                      else return 0;
+                    })
+                  }
+                })
+              }
+              else console.warn(`Couldnt find a matching pokemon: `, unvue(pokemonCP));
+            }
+            return map;
+          }, {})
+          console.log(unvue(results));
+        } catch (e) {
+          console.error(e);
+        }       
       }
     }
   };
