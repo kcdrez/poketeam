@@ -4,14 +4,15 @@
     <h1 class="text-center">Strong Pokemon</h1>
     <div class="container">
       <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6 text-center" v-for="typing in results">
+        <div class="col-lg-2 col-md-4 col-sm-6 text-center" v-for="typing in results" :key="typing.type">
           <typeIcon :type="typing.type" @click.native="selected = typing" hoverClick class="mx-1" />
         </div>
       </div>
       <div class="row" v-if="selected">
         <template v-for="(pokemon, index) in selected.pokemon">
-          <div class="col-lg-4 col-md-6 col-sm-12 text-center" v-if="index <= 11">
+          <div class="col-lg-4 col-md-6 col-sm-12 text-center" v-if="index <= 11" :key="pokemon.pokemon_id">
             <img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon_id}.png`">
+            <!-- <img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.pokemon_id}.png`"> -->
             <div>{{pokemon.pokemon_name}}</div>
             <div>Max CP: {{pokemon.max_cp}}</div>
           </div>

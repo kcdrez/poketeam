@@ -74,7 +74,7 @@ module.exports = {
     		use: 'url-loader?limit=10000&mimetype=image/svg+xml'  
     	}
     ]
-  },  
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new VueLoaderPlugin(),
