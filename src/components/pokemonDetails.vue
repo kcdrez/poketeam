@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <div class="row">
-      <img :src="pokemon.details.sprites.front_default">
+      <div class="col-6">
+        <img :src="pokemon.details.sprites.front_default">
+      </div>
+      <div class="col-6">
+        <img :src="pokemon.details.sprites.front_shiny">
+      </div>
     </div>
     <div class="row">
       <div class="col-12 text-center">
@@ -12,7 +17,7 @@
     </div>
     <div class="row mb-3">
       <template v-for="category in pokemon.typing">
-        <div class="col-lg-2 col-md-4 col-sm-12 my-2" v-if="category.values.length > 0">
+        <div class="col-lg-2 col-md-4 col-sm-12 my-2" v-if="category.values.length > 0" :key="category.label">
           <div>{{category.label}} (x{{category.modifier.toFixed(2)}})</div>
           <typeIcon v-for="type in category.values" :key="type" :type="type" class="text-center" />
         </div>
