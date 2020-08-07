@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-6">
+      <div class="col-lg-6 col-md-12">
         <img :src="pokemon.details.sprites.front_default">
       </div>
-      <div class="col-6">
+      <div class="col-lg-6 col-md-12">
         <img :src="pokemon.details.sprites.front_shiny">
       </div>
     </div>
@@ -43,8 +43,9 @@
 
 <style scoped lang="scss">
   img { 
-    height: 300px;
-    margin-left: auto;
-    margin-right: auto;
+    height: 600px;
+    width: 300px;
+    object-fit: contain;
+    margin: -50%;
   }
 </style>
