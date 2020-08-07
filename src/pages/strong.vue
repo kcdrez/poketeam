@@ -12,7 +12,6 @@
         <template v-for="(pokemon, index) in selected.pokemon">
           <div class="col-lg-4 col-md-6 col-sm-12 text-center" v-if="index <= 11" :key="pokemon.pokemon_id">
             <img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon_id}.png`">
-            <!-- <img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.pokemon_id}.png`"> -->
             <div>{{pokemon.pokemon_name}}</div>
             <div>Max CP: {{pokemon.max_cp}}</div>
           </div>

@@ -13,7 +13,7 @@
                 aria-controls="search" 
                 aria-selected="true">Search</a>
             </li>
-            <li class="nav-item" v-for="pokemon in pokemonTeam">
+            <li class="nav-item" v-for="(pokemon, index) in pokemonTeam" :key="`team` + index">
               <a class="nav-link text-capitalize" 
                 :href="`#pokemon_${pokemon.details.id}`" 
                 :id="`tab_${pokemon.details.id}`" 
@@ -57,7 +57,8 @@
                   class="tab-pane fade text-center" 
                   role="tabpanel" 
                   :id="`pokemon_${pokemon.details.id}`" 
-                  :aria-labelledby="`tab_${pokemon.details.id}`">
+                  :aria-labelledby="`tab_${pokemon.details.id}`"
+                  :key="`pokemon` + index">
               <button class="btn btn-sm btn-danger my-1" @click="remove(index)">Remove</button>
               <pokemonDetails :pokemon="pokemon" />
             </div>
