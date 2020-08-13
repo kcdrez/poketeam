@@ -28,19 +28,19 @@
             <div class="tab-pane fade show active text-center" role="tabpanel" id="search" aria-labelledby="search-tab">
               <div class="input-group input-group-sm search">
                 <div class="input-group-prepend">
-                  <div class="input-group-text">Enter a Pokémon name</div>
+                  <div class="input-group-text">Name</div>
                 </div>
                 <autocomplete :search="getList"
                               :getResultValue="getName"
                               @submit="searchPokemon = $event"
-                              >
+                              class="autocomplete-container">
                 </autocomplete>
                 <div class="input-group-append">
                   <button @click="search" class="btn btn-success">Search</button>
                 </div>
               </div>
               <template v-if="myPokemon !== null">
-                <button class="btn btn-primary btn-sm"
+                <button class="btn btn-primary btn-sm my-2"
                         @click="addToTeam(myPokemon)">Add</button>
                 <pokemonDetails :pokemon="myPokemon" />
               </template>
@@ -54,7 +54,7 @@
                   :id="`pokemon_${pokemon.details.id}`" 
                   :aria-labelledby="`tab_${pokemon.details.id}`"
                   :key="`pokemon` + index">
-              <button class="btn btn-sm btn-danger my-1" @click="remove(index)">Remove</button>
+              <button class="btn btn-sm btn-danger my-2" @click="remove(index)">Remove</button>
               <pokemonDetails :pokemon="pokemon" />
             </div>
           </div>
@@ -298,14 +298,23 @@
 
 <style lang="scss">
   #type-effectiveness-page {
+    .autocomplete-container {
+      display: flex;
+      flex-grow: 1;
+    }
+    .autocomplete {
+      width: 100%;
+    }
     .autocomplete-input {
       border-radius: 0;
       background-color: white;
       padding: 5px 10px 5px 45px;
       border-color: #ced4da;
+      font-size: .875rem;
     }
     ul.autocomplete-result-list {
       border-color: #ced4da;
+      font-size: .875rem;
       li {
         padding: 5px 10px 5px 45px;
       }

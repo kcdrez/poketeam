@@ -46,7 +46,7 @@
     height: 600px;
     width: 300px;
     object-fit: contain;
-    margin: -190px;
+    margin: -180px;
     pointer-events: none;
   }
 </style>
