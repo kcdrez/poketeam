@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div id="type-effectiveness-page">
     <navbar />
-    <div class="container">
+    <div class="container my-2">
       <div class="row">
         <div class="col">
           <ul class="nav nav-tabs">
@@ -23,15 +23,6 @@
                 {{pokemon.details.name}}
               </a>
             </li>
-<!--             <li class="nav-item ml-auto d-flex">
-              <a class="nav-link"
-                  :class="{disabled: pokemonTeam.length < 1}"
-                  href="#optimize"
-                  id="optimize-tab"
-                  data-toggle="tab"
-                  aria-controls="optimize"
-                  aria-selected="false">Optimize Team</a>
-            </li> -->
           </ul>
           <div class="tab-content">
             <div class="tab-pane fade show active text-center" role="tabpanel" id="search" aria-labelledby="search-tab">
@@ -39,7 +30,11 @@
                 <div class="input-group-prepend">
                   <div class="input-group-text">Enter a Pokémon name</div>
                 </div>
-                <input class="form-control" type="text" v-model="searchName" @keyup.enter="search">
+                <autocomplete :search="getList"
+                              :getResultValue="getName"
+                              @submit="searchPokemon = $event"
+                              >
+                </autocomplete>
                 <div class="input-group-append">
                   <button @click="search" class="btn btn-success">Search</button>
                 </div>
@@ -62,18 +57,6 @@
               <button class="btn btn-sm btn-danger my-1" @click="remove(index)">Remove</button>
               <pokemonDetails :pokemon="pokemon" />
             </div>
-<!--             <div class="tab-pane fade text-center" role="tabpanel" id="optimize" aria-labelledby="optimize-tab">
-              <div class="container">
-                <div class="row">
-                  <div class="col-3">
-                    Typing Summary:
-                    <template v-for="(count, type) in optimized.typing">
-                      <typeIcon :type="type" /> x{{count}}
-                    </template>
-                  </div>
-                </div>
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
@@ -83,7 +66,6 @@
 
 <script>
   import axios from 'axios';
-  import Cookie from 'js-cookie';
   import {unvue, distinct} from '../../utils';
   import typeIcon from '../components/typeIcon.vue';
   import pokemonDetails from '../components/pokemonDetails.vue';
@@ -95,10 +77,11 @@
     },
     data() {
       return {
-        searchName: '',
+        searchPokemon: {},
         pokemonTeam: [],
         myPokemon: null,
-        error: null
+        error: null,
+        searchText: ''
       }
     },
     computed: {
@@ -114,21 +97,26 @@
         return {
           typing
         }
+      },
+      fullList() {
+        return Object.values(this.$store.state.released);
       }
     },
     methods: {
       async search() {
-        try {
-          this.myPokemon = await this.getDetails(this.searchName);
-        } catch (e) {
-          this.error = "That Pokémon could not be found!";
+        if ('id' in this.searchPokemon) {
+          try {
+            this.myPokemon = await this.getDetails(this.searchPokemon.id);
+          } catch (e) {
+            this.error = "That Pokémon could not be found!";
+          }
         }
       },
-      async getDetails(name) {
+      async getDetails(id) {
         try {
           const details = (await axios({
             method:"GET",
-            url: `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
+            url: `https://pokeapi.co/api/v2/pokemon/${id}`
           })).data;
           const typing = {
             double_damage_from: [],
@@ -270,18 +258,24 @@
       remove(index) {
         this.pokemonTeam.splice(index, 1);
         $('#search-tab').tab('show');
+      },
+      getList(input) {
+        return this.fullList.filter(x => x.name.toLowerCase().includes(input.toLowerCase()));
+      },
+      getName(val) {
+        return val.name;
       }
     },
     watch: {
       pokemonTeam: {
         deep: true,
         handler(newVal) {
-          Cookie.set('pokemonList', newVal.map(x => x.details.name));
+          localStorage.setItem('pokemonList', JSON.stringify(newVal.map(x => x.details.name)));
         }
       }
     },
     async created() {
-      const pokeList = Cookie.getJSON('pokemonList');
+      const pokeList = JSON.parse(localStorage.getItem('pokemonList'));
       if (Array.isArray(pokeList)) {
         for (let i = 0; i < pokeList.length; i++) {
           this.pokemonTeam.push(await this.getDetails(pokeList[i]))
@@ -299,5 +293,22 @@
     max-width: 500px;
     text-align: center;
     margin: .25rem auto;
+  }
+</style>
+
+<style lang="scss">
+  #type-effectiveness-page {
+    .autocomplete-input {
+      border-radius: 0;
+      background-color: white;
+      padding: 5px 10px 5px 45px;
+      border-color: #ced4da;
+    }
+    ul.autocomplete-result-list {
+      border-color: #ced4da;
+      li {
+        padding: 5px 10px 5px 45px;
+      }
+    }
   }
 </style>

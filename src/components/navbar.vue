@@ -13,10 +13,22 @@
           <router-link :to="{name: 'strong'}" class="nav-link">Strongest Pokemon</router-link>
         </li>        
       </ul>
+      <div class="navbar-text">
+        <small>Version: {{version}}</small>
+      </div>
     </div>
   </nav>
 </template>
 
 <script>
-  export default {};
+  import {version} from '../../package.json';
+
+  export default {
+    name: 'navbar',
+    data() {
+      return {
+        version
+      }
+    }
+  };
 </script>

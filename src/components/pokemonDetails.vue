@@ -42,10 +42,11 @@
 </script>
 
 <style scoped lang="scss">
-  img { 
+  img {
     height: 600px;
     width: 300px;
     object-fit: contain;
-    margin: -50%;
+    margin: -190px;
+    pointer-events: none;
   }
 </style>

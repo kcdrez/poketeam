@@ -1,6 +1,6 @@
 {
   "name": "pokemon",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@trevoreyre/autocomplete-vue": "^2.2.0",
     "axios": "^0.19.0",
     "bootstrap": "^4.5.0",
     "jquery": "^3.5.1",
